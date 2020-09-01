@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">BlurryTest</string>
+    <string name="cartoon">cartoon</string>
+    <string name="blurry">blurry</string>
+    <string name="large_view">large view</string>
+    <string name="_3_4">3:4</string>
+    <string name="_9_16">9:16</string>
+    <string name="_1_1">1:1</string>
+    <string name="full">full</string>
+    <string name="original_layout">original layout</string>
+</resources>
