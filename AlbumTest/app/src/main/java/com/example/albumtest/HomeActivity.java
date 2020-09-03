@@ -25,11 +25,11 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         init ();
-        requestPermission ();
+        bPermissionOK = requestPermission ();
     }
 
-    public void requestPermission () {
-        PermissionHelper.MyRequestPermission(this, PermissionList, new PermissionInterface() {
+    public boolean requestPermission () {
+        return PermissionHelper.MyRequestPermission(this, PermissionList, new PermissionInterface() {
             @Override
             public int doPermissionSucceed() {
                 bPermissionOK = true;
@@ -63,19 +63,33 @@ public class HomeActivity extends AppCompatActivity {
 
     private void init () {
 
-        findViewById(R.id.home_text_view).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.home_btn_album).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startGLActivity ();
+                startAlbumActivity();
+            }
+        });
+
+        findViewById(R.id.home_btn_gallery_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startGalleryActivity();
             }
         });
     }
 
-    private void startGLActivity () {
-//        if (bPermissionOK) {
+    private void startAlbumActivity() {
+        if (bPermissionOK) {
             Intent intent = new Intent(this, AlbumActivity.class);
             startActivity(intent);
-//        }
+        }
+    }
+
+    private void startGalleryActivity() {
+        if (bPermissionOK) {
+            Intent intent = new Intent(this, GalleryViewActivity.class);
+            startActivity(intent);
+        }
     }
 
 }

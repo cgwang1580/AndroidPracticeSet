@@ -2,6 +2,7 @@
     <string name="app_name">AlbumTest</string>
     <string name="home_activity">HomeActivity</string>
     <string name="album_activity">AlbumActivity</string>
+    <string name="gallery_view_activity">GalleryViewActivity</string>
     <string name="open_system_album">album</string>
     <string name="save_system_gallery">save</string>
     <string name="open_camera">camera</string>
