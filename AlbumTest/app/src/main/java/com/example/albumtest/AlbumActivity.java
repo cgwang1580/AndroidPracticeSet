@@ -50,6 +50,13 @@ public class AlbumActivity extends AppCompatActivity {
     }
 
     private void initUI () {
+        View decorView = this.getWindow().getDecorView();
+        // Hide both the navigation bar and the status bar.
+        // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
+        // a general rule, you should design your app to hide the status bar whenever you
+        // hide the navigation bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_LOW_PROFILE;
+        decorView.setSystemUiVisibility(uiOptions);
         mImageView = this.findViewById(R.id.image_view);
         mBtnOpenAlbum = this.findViewById(R.id.btn_open_album);
         mTextViewInfo = this.findViewById(R.id.text_view_info);
