@@ -1,17 +1,22 @@
 package com.example.albumtest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ActionMenuView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,9 +27,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -33,31 +42,55 @@ public class GalleryViewActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getName();
 
     private ViewPager mViewPager = null;
-    ArrayList<Integer> mImageIdList = null;
-    ArrayList<ImageView> mImageViewArrayList = null;
-    MyPagerAdapter mPagerAdapter = null;
+    private ArrayList<Integer> mImageIdList = null;
+    private ArrayList<ImageView> mImageViewArrayList = null;
+    private MyPagerAdapter mPagerAdapter = null;
+    private boolean bShowStatusAndNavigationBar = true;
+    private Toolbar mToolbar = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_gallery_view);
         initUI();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, mToolbar.getMenu());
+        return true;
+    }
+
     private void initUI () {
         MyLog.d(TAG, "initUI");
-        // hide action bar
-        if (getSupportActionBar() != null){
-            getSupportActionBar().hide();
+        mToolbar = findViewById(R.id.gallery_toolbar);
+        mToolbar.setNavigationIcon(R.drawable.back_normal);
+        setSupportActionBar(mToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
         }
-        //setSystemUIVisible (false);
-        setNavigationColor ();
 
-        findViewById(R.id.gallery_btn_back).setOnClickListener(new View.OnClickListener() {
+        // hide action bar
+        /*if (getSupportActionBar() != null){
+            getSupportActionBar().hide();
+        }*/
+        //setSystemUIVisible (false);
+        //Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        //setNavigationColor ();
+
+        /*findViewById(R.id.gallery_btn_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             }
-        });
+        });*/
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -95,10 +128,15 @@ public class GalleryViewActivity extends AppCompatActivity {
     }
 
     private void setNavigationColor () {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setNavigationBarColor(Color.BLACK);
             //getWindow().setNavigationBarColor(getResources().getColor(R.color.black));
             //getWindow().setNavigationBarColor(Color.BLUE);
+        }*/
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//设置透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);//设置透明导航栏
         }
     }
 
@@ -121,7 +159,8 @@ public class GalleryViewActivity extends AppCompatActivity {
             mImageViewArrayList.add(iv);
         }
         mPagerAdapter = new MyPagerAdapter(this, mImageViewArrayList);*/
-        mPagerAdapter = new MyPagerAdapter(this, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath());
+        mPagerAdapter = new MyPagerAdapter(this, Environment.getExternalStorageDirectory().getPath()
+                + "/arcsoft/com.arcsoft.avatarengine_app_1/res_img");
         mViewPager = findViewById(R.id.gallery_view_pager);
         mViewPager.setAdapter(mPagerAdapter);
     }
@@ -157,6 +196,7 @@ public class GalleryViewActivity extends AppCompatActivity {
             File file = mPictureFileList.get(position);
             Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
             ImageView imageView = new ImageView(this.context);
+            imageView.setOnClickListener(mViewPageOnClickListener);
             imageView.setScaleType(ImageView.ScaleType.CENTER);
             if (bitmap != null) {
                 //imageView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
@@ -172,6 +212,40 @@ public class GalleryViewActivity extends AppCompatActivity {
             container.removeView(imageView);
         }
     }
+
+    private View.OnClickListener mViewPageOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //setStatusBarVisible (bShowStatusAndNavigationBar);
+            //NavigationBarStatusBar (GalleryViewActivity.this, bShowStatusAndNavigationBar);
+            //bShowStatusAndNavigationBar = !bShowStatusAndNavigationBar;
+        }
+    };
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        MyLog.d(TAG, "onWindowFocusChanged hasFocus = " + hasFocus);
+        super.onWindowFocusChanged(hasFocus);
+        //NavigationBarStatusBar (this, hasFocus);
+    }
+
+    public static void NavigationBarStatusBar(Activity activity, boolean hasFocus){
+        if (Build.VERSION.SDK_INT >= 19) {
+            View decorView = activity.getWindow().getDecorView();
+            if (hasFocus) {
+                decorView.setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE);
+            } else {
+                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            }
+        }
+    }
+
 
     private void hideNavigationBar() {
         View decorView = getWindow().getDecorView();
@@ -206,7 +280,7 @@ public class GalleryViewActivity extends AppCompatActivity {
         if (list != null && list.size() > 0) {
             Collections.sort(list, new Comparator<File>() {
                 public int compare(File file, File newFile) {
-                    if (file.lastModified() < newFile.lastModified()) {
+                    if (file.lastModified() > newFile.lastModified()) {
                         return -1;
                     } else if (file.lastModified() == newFile.lastModified()) {
                         return 0;
