@@ -18,9 +18,9 @@ import java.io.OutputStream;
 
 public class GalleryFileSaver {
     //在系统的图片文件夹下创建了一个相册文件夹，名为“myPhotos"，所有的图片都保存在该文件夹下。
-    public static final String PIC_DIR_NAME = "Camera";
+    public static final String PIC_DIR_NAME = "Avatar";
     //图片统一保存在系统的图片文件夹中
-    private static File mPicDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), PIC_DIR_NAME);
+    private static File mPicDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), PIC_DIR_NAME);
 
     public static Uri saveBitmapToGallery(final Context mContext, String fileName, Bitmap bitmap) {
         OutputStream out = null;

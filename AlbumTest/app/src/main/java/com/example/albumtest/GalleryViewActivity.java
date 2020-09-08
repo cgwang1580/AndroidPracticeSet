@@ -1,5 +1,6 @@
 package com.example.albumtest;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -23,9 +24,11 @@ import android.widget.Toast;
 import com.example.utils.MyLog;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,32 +49,17 @@ public class GalleryViewActivity extends AppCompatActivity {
     private ArrayList<ImageView> mImageViewArrayList = null;
     private MyPagerAdapter mPagerAdapter = null;
     private boolean bShowStatusAndNavigationBar = true;
-    private Toolbar mToolbar = null;
+    private ActionBar mActionBar = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_gallery_view);
         initUI();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, mToolbar.getMenu());
-        return true;
-    }
-
     private void initUI () {
         MyLog.d(TAG, "initUI");
-        mToolbar = findViewById(R.id.gallery_toolbar);
-        mToolbar.setNavigationIcon(R.drawable.back_normal);
-        setSupportActionBar(mToolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
 
         // hide action bar
         /*if (getSupportActionBar() != null){
@@ -79,7 +67,11 @@ public class GalleryViewActivity extends AppCompatActivity {
         }*/
         //setSystemUIVisible (false);
         //Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        //setNavigationColor ();
+        setNavigationColor ();
+        mActionBar = getSupportActionBar();
+        if (mActionBar != null) {
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         /*findViewById(R.id.gallery_btn_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,8 +81,9 @@ public class GalleryViewActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        return super.onOptionsItemSelected(item);
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     @Override
@@ -163,6 +156,37 @@ public class GalleryViewActivity extends AppCompatActivity {
                 + "/arcsoft/com.arcsoft.avatarengine_app_1/res_img");
         mViewPager = findViewById(R.id.gallery_view_pager);
         mViewPager.setAdapter(mPagerAdapter);
+        String firstFileTime = getFileModifyTime(mPagerAdapter.mPictureFileList.get(0));
+        mActionBar.setTitle(firstFileTime);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                MyLog.d(TAG, "onPageSelected position = " + position);
+                File file = mPagerAdapter.mPictureFileList.get(position);
+                String modifyTime = getFileModifyTime (file);
+                mActionBar.setTitle(modifyTime);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private String getFileModifyTime (File file) {
+        String modifyTime = null;
+        if (file != null) {
+            long time= file.lastModified();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy年M月d日");
+            modifyTime = formatter.format(time);
+        }
+        return modifyTime;
     }
 
     protected class MyPagerAdapter extends PagerAdapter {
@@ -184,7 +208,6 @@ public class GalleryViewActivity extends AppCompatActivity {
             //return ivGoodsList.size();
             return mPictureFileList.size();
         }
-
         @Override
         public boolean isViewFromObject(View view, Object object) {
             return view==object;
@@ -192,11 +215,11 @@ public class GalleryViewActivity extends AppCompatActivity {
 
         @Override
         public ImageView instantiateItem(ViewGroup container, int position) {
+            MyLog.d(TAG, "instantiateItem position = " + position);
             //ImageView imageView=ivGoodsList.get(position);
             File file = mPictureFileList.get(position);
             Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
             ImageView imageView = new ImageView(this.context);
-            imageView.setOnClickListener(mViewPageOnClickListener);
             imageView.setScaleType(ImageView.ScaleType.CENTER);
             if (bitmap != null) {
                 //imageView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
