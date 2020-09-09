@@ -5,18 +5,28 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 
+import com.example.utils.MyLog;
+
+import java.awt.font.TextAttribute;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.annotation.Target;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class GalleryFileSaver {
+
+    public final static String TAG = "GalleryFileSaver";
+
     //在系统的图片文件夹下创建了一个相册文件夹，名为“myPhotos"，所有的图片都保存在该文件夹下。
     public static final String PIC_DIR_NAME = "Avatar";
     //图片统一保存在系统的图片文件夹中
@@ -48,8 +58,8 @@ public class GalleryFileSaver {
             values.put(MediaStore.Images.ImageColumns.HEIGHT, bitmap.getHeight());
             Uri uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
             if (uri != null) {
-                out = resolver.openOutputStream(uri);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                /*out = resolver.openOutputStream(uri);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);*/
                 return uri;
             }
         } catch (Exception e) {
@@ -95,6 +105,11 @@ public class GalleryFileSaver {
         }
         // 最后通知图库更新
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(file.getAbsolutePath())));
+    }
+
+    public static void SaveBitmapToGallery (Context context, Bitmap bitmap) {
+        MyLog.d(TAG, "SaveBitmapToGallery begin");
+        ContentResolver contentResolver = context.getContentResolver();
     }
 }
 

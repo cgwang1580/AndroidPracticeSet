@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.utils.MyLog;
 
@@ -151,8 +152,11 @@ public class AlbumActivity extends AppCompatActivity {
             mImageView.setBackground(new BitmapDrawable(getResources(), mBitmap));
             //String pathImg = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "", "");
             String path = "test_" + System.currentTimeMillis()/1000 + ".jpeg";
+            MyLog.d(TAG, "saveImageToGallery begin");
             GalleryFileSaver.saveBitmapToGallery(this, path, mBitmap);
+            MyLog.d(TAG, "saveImageToGallery end");
             //GalleryFileSaver.saveToSystemGallery(this, mBitmap);
+            Toast.makeText(this, "saveImageToGallery done", Toast.LENGTH_SHORT).show();
         }
     }
 
