@@ -5,30 +5,23 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-
 import com.example.utils.MyLog;
-
-import java.awt.font.TextAttribute;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.annotation.Target;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class GalleryFileSaver {
 
     public final static String TAG = "GalleryFileSaver";
 
     //在系统的图片文件夹下创建了一个相册文件夹，名为“myPhotos"，所有的图片都保存在该文件夹下。
-    public static final String PIC_DIR_NAME = "Avatar";
+    public static final String PIC_DIR_NAME = "myPhotos";
     //图片统一保存在系统的图片文件夹中
     private static File mPicDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), PIC_DIR_NAME);
 
@@ -41,7 +34,10 @@ public class GalleryFileSaver {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             long size = stream.size();
             stream.close();
-            mPicDir.mkdirs();
+            if (!mPicDir.exists()) {
+                boolean bCreated = mPicDir.mkdirs();
+                if (!bCreated) return null;
+            }
             String mPicPath = new File(mPicDir, fileName).getAbsolutePath();
             ContentValues values = new ContentValues();
             ContentResolver resolver = mContext.getContentResolver();

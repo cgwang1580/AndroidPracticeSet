@@ -88,6 +88,8 @@ public class HomeActivity extends AppCompatActivity {
     private void startGalleryActivity() {
         if (bPermissionOK) {
             Intent intent = new Intent(this, GalleryViewActivity.class);
+            final String picture_folder = "/test_jpeg";
+            intent.putExtra("folder", picture_folder);
             startActivity(intent);
         }
     }
