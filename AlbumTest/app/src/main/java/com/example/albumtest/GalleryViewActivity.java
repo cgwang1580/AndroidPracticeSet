@@ -153,7 +153,7 @@ public class GalleryViewActivity extends AppCompatActivity {
         }
         mPagerAdapter = new MyPagerAdapter(this, mImageViewArrayList);*/
         mPagerAdapter = new MyPagerAdapter(this, Environment.getExternalStorageDirectory().getPath()
-                + "/arcsoft/com.arcsoft.avatarengine_app_1/res_img");
+                + "OpenGLESTest");
         mViewPager = findViewById(R.id.gallery_view_pager);
         mViewPager.setAdapter(mPagerAdapter);
         String firstFileTime = getFileModifyTime(mPagerAdapter.mPictureFileList.get(0));
