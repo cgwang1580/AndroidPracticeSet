@@ -18,7 +18,6 @@ import com.example.utils.MyFileUtils;
 import com.example.utils.MyLog;
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -170,7 +169,7 @@ public class GalleryViewActivity extends AppCompatActivity {
             File file = mPictureFileList.get(position);
             Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
             ImageView imageView = new ImageView(this.context);
-            imageView.setScaleType(ImageView.ScaleType.CENTER);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
                 container.addView(imageView);

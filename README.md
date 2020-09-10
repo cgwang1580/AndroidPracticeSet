@@ -6,10 +6,35 @@
 
 ## 项目内容
 
-### BitMap模糊+Animation动画
+### BlurryTest
+
+#### BitMap模糊+Animation动画
 
 在相机切换分辨率的时候需要增加一些动画：先模糊，然后加入拉伸和改变Alpha通道的动画。
 
-项目名：BlurryTest
+项目名：**BlurryTest**
 
-<img src = "resource/BlurryTest/blurryTest-effect.gif">
+效果：
+
+<img src="resource/BlurryTest/blurry.gif" style="zoom:0.7">
+
+### AlBumTest
+
+#### 打开系统相册保存图片通知刷新
+
+功能：打开系统相册选择图片并显示，保存获取到的图片到指定目录并通知系统相册更新。
+
+效果：
+
+<img src="resource/AlbumTest/album.gif" style="zoom:0.35">
+
+#### ViewPager显示指定目录下图片
+
+功能：在指定目录下打开JPEG文件，并用`ViewPager`显示，`ActionBar`显示每张图最后被修改的时间。
+
+效果如下：
+
+<img src="resource/AlbumTest/gallery.gif" style="zoom:0.35">
+
+
+
